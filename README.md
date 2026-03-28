@@ -123,27 +123,28 @@ This section compares Torch(MPS) and Lightning Core backends on the same machine
 
 | Bench | Shape | Lightning Core ms | Torch MPS ms | Speedup (Torch/LCore) |
 | --- | --- | ---: | ---: | ---: |
-| vector_add | n=4096 | 0.0008 | 0.3149 | 379.78x |
-| vector_add | n=16384 | 0.0030 | 0.1873 | 61.70x |
-| vector_add | n=65536 | 0.0085 | 0.1914 | 22.53x |
-| vector_add | n=262144 | 0.0284 | 0.2058 | 7.26x |
-| vector_add | n=1048576 | 0.1116 | 0.2508 | 2.25x |
-| matmul | m=256,k=256,n=256 | 0.5526 | 0.4161 | 0.75x |
-| matmul | m=512,k=512,n=512 | 0.3508 | 0.2572 | 0.73x |
-| matmul | m=1024,k=1024,n=1024 | 1.3727 | 0.7817 | 0.57x |
+| vector_add | n=4096 | 0.0008 | 0.3401 | 421.89x |
+| vector_add | n=16384 | 0.0031 | 0.3042 | 99.45x |
+| vector_add | n=65536 | 0.0083 | 0.1926 | 23.33x |
+| vector_add | n=262144 | 0.0285 | 0.2101 | 7.38x |
+| vector_add | n=1048576 | 0.1087 | 0.2559 | 2.35x |
+| matmul | m=256,k=256,n=256 | 0.2373 | 0.1943 | 0.82x |
+| matmul | m=512,k=512,n=512 | 0.2957 | 0.2617 | 0.89x |
+| matmul | m=1024,k=1024,n=1024 | 0.9845 | 1.2519 | 1.27x |
+| matmul | m=2048,k=2048,n=2048 | 5.7157 | 4.7575 | 0.83x |
 
 Interpretation:
 
 - Lightning Core is clearly stronger on vector-add style paths in this environment.
-- Torch MPS is stronger on larger dense matmul in this run.
+- Dense matmul is mixed: Lightning Core wins at 1024, while Torch MPS still leads at 256/512 and 2048.
 - Exia lets you select backend per workload, so you can use the better path for each operator family.
 
 ```mermaid
 xychart-beta
 	title "Torch(MPS)/Lightning Core Speedup by Workload"
-	x-axis ["v4096", "v16384", "v65536", "v262144", "v1048576", "m256", "m512", "m1024"]
+	x-axis ["v4096", "v16384", "v65536", "v262144", "v1048576", "m256", "m512", "m1024", "m2048"]
 	y-axis "Speedup (Torch/LCore)" 0 --> 400
-	bar [379.78, 61.70, 22.53, 7.26, 2.25, 0.75, 0.73, 0.57]
+	bar [421.89, 99.45, 23.33, 7.38, 2.35, 0.82, 0.89, 1.27, 0.83]
 ```
 
 Raw artifacts:
